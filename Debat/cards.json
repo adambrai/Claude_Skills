@@ -1,0 +1,46 @@
+{
+  "version": 1,
+  "about": "Strategy cards for /debat. Each debater gets the same task and one card: a reasoning mode, a method and a priority. The dealer never repeats a card and spreads every entry as evenly as it can. Add or edit entries freely; ids must stay unique inside a list.",
+  "reasoning": [
+    {"id": "first-principles", "name": "First principles", "how": "Reduce the task to facts and requirements that cannot be disputed, then rebuild the answer from those alone. Keep a convention only if it still earns its place."},
+    {"id": "pre-mortem", "name": "Pre-mortem", "how": "Assume your answer has already failed in real use. Write down why it failed, then design the answer so that none of those failures can happen."},
+    {"id": "cross-domain", "name": "Cross-domain transfer", "how": "Find a solved problem from another field with the same structure. Transfer its solution, then repair every place where the comparison does not hold."},
+    {"id": "hostile-reviewer", "name": "Hostile reviewer", "how": "Imagine the toughest expert who wants to reject your answer. List their objections first and build an answer that leaves them nothing to say."},
+    {"id": "constraints", "name": "Constraints first", "how": "List every hard limit, stated or implied: time, money, tools, format, audience, skills. Only then search the space that remains."},
+    {"id": "concrete-case", "name": "Concrete case", "how": "Work one real, fully specified example end to end before generalising. Let the example expose what the abstract answer would have missed."},
+    {"id": "socratic", "name": "Socratic", "how": "Question each assumption hidden in the task until only justified ones remain, and answer from those."},
+    {"id": "contrarian", "name": "Contrarian", "how": "Start from the opposite of the obvious answer and argue for it seriously. Keep the obvious answer only if it survives that test."},
+    {"id": "systems", "name": "Systems view", "how": "Map the parts, the flows between them and the feedback loops. Look for second-order effects and where a change upstream breaks something downstream."},
+    {"id": "quantitative", "name": "Quantitative", "how": "Put numbers on everything that matters: sizes, costs, latencies, probabilities, effort. Decide with estimates, not adjectives."},
+    {"id": "user-journey", "name": "User journey", "how": "Walk through the answer step by step as the person who will use it. Every point where they would hesitate or get stuck is a defect."},
+    {"id": "decomposition", "name": "Decomposition", "how": "Split the task into independent sub-problems, solve each one well, then check that the pieces fit together without gaps."},
+    {"id": "evidence", "name": "Evidence first", "how": "Gather what can be checked before deciding: read the files, the docs, the data. Every important claim in the answer must point to its evidence."},
+    {"id": "options", "name": "Option space", "how": "Lay out at least three genuinely different approaches, compare them on the task's criteria, and commit to the best with reasons."}
+  ],
+  "methods": [
+    {"id": "draft-critique-rewrite", "name": "Draft, critique, rewrite", "how": "Write a full draft quickly, criticise it line by line as a reviewer would, then rewrite it from that critique."},
+    {"id": "outline", "name": "Outline first", "how": "Fix the structure and the key points before writing any detail, then fill each part in."},
+    {"id": "test-first", "name": "Test first", "how": "Write the checks the answer must pass (tests, acceptance criteria, examples) before the answer, then build until all pass."},
+    {"id": "three-drafts", "name": "Three drafts", "how": "Produce three short, deliberately different drafts, keep the strongest, and graft in the best parts of the other two."},
+    {"id": "research-synthesis", "name": "Research then synthesis", "how": "Collect the relevant facts and sources first, then write an answer that uses them, nothing more."},
+    {"id": "backward", "name": "Work backward", "how": "Start from the finished result the user wants and derive each preceding step until you reach the current situation."},
+    {"id": "minimal-then-harden", "name": "Minimal, then harden", "how": "Build the smallest answer that satisfies the task, then harden it against every failure case you can find."},
+    {"id": "checklist", "name": "Requirement checklist", "how": "Extract every requirement into a numbered checklist, answer each one explicitly, and verify none is left unticked."},
+    {"id": "iterate-on-examples", "name": "Iterate on examples", "how": "Run the answer mentally (or for real) on several varied examples, including awkward ones, and fix it after each run."},
+    {"id": "explain-to-learner", "name": "Explain to a learner", "how": "Write as if teaching someone smart who knows nothing of the context. Gaps in the explanation reveal gaps in the answer."}
+  ],
+  "priorities": [
+    {"id": "simplest", "name": "Simplest thing that works", "how": "When in doubt, choose the solution with fewer moving parts that still meets every requirement."},
+    {"id": "rigour", "name": "Maximum rigour", "how": "Correctness above all: no unchecked claim, no hand-waving, every edge case handled or explicitly ruled out."},
+    {"id": "robustness", "name": "Robustness", "how": "Optimise for what still works when inputs are wrong, load is high or parts fail."},
+    {"id": "user-value", "name": "User value", "how": "Optimise for what the end user actually gains: clarity, time saved, fewer decisions for them to make."},
+    {"id": "security", "name": "Security and safety", "how": "Treat every input as hostile and every secret as precious. Close abuse paths before adding features."},
+    {"id": "performance", "name": "Performance", "how": "Optimise for speed, memory and cost, with numbers to back each choice."},
+    {"id": "maintainability", "name": "Maintainability", "how": "Optimise for the next person who has to read, change or extend this. Clear names, small parts, no cleverness without payoff."},
+    {"id": "speed-to-ship", "name": "Speed to ship", "how": "Optimise for something usable today; defer what can safely wait, and say what was deferred."},
+    {"id": "completeness", "name": "Completeness", "how": "Leave nothing for the user to fill in: every step, value, file and command present."},
+    {"id": "evidence-backed", "name": "Evidence backed", "how": "Prefer the option you can prove with a test, a measurement or a source over the one that merely sounds right."},
+    {"id": "standards", "name": "Standards and best practice", "how": "Follow the established conventions of the domain unless there is a stated reason not to, and name the convention you follow."},
+    {"id": "originality", "name": "Originality", "how": "Look for the non-obvious answer that the others will miss, as long as it fully meets the task."}
+  ]
+}
