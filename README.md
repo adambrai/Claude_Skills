@@ -1,4 +1,4 @@
-# Claud_Skills
+# Claude_Skills
 
 Une collection de **skills pour [Claude Code](https://claude.com/claude-code)**.
 
