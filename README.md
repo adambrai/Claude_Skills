@@ -16,6 +16,7 @@ README.*
 |---|---|---|
 | [`Debat/`](Debat/) | `/debat` | Fait débattre plusieurs agents Claude jusqu'à obtenir la meilleure réponse possible. |
 | [`Purple/`](Purple/) | `/purple` | Durcit la sécurité d'un projet en boucle, jusqu'à ce que les attaques automatiques ne trouvent plus rien. |
+| [`Aegis/`](Aegis/) | `/aegis` | Cadre une session de sécurité (périmètre, autorisation, but défensif) pour étudier ou travailler proprement. |
 
 ### [Débat](Debat/) — `/debat`
 
@@ -41,6 +42,16 @@ Tout se passe en local, sur une copie du projet ; l'original n'est jamais modifi
 sort sur le réseau. À la fin : le code durci, un test par faille corrigée, et un rapport.
 
 [Documentation de Purple](Purple/README.md)
+
+### [Aegis](Aegis/) — `/aegis`
+
+Pose le cadre d'un travail de sécurité avant de commencer : la cible et son périmètre, la base
+d'autorisation (ton code, ton lab, un CTF), l'objectif défensif ou pédagogique, et les règles.
+Utile pour étudier, résoudre un CTF, réviser une certification ou préparer une revue. Elle ne
+contourne aucun système de sécurité : elle décrit un travail légitime pour qu'il soit clair,
+puis passe le relais aux skills plus profondes.
+
+[Documentation d'Aegis](Aegis/README.md)
 
 ## Installer une skill
 
