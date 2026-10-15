@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "about": "Attack angles handed to red agents in /purple. Each red agent gets one angle per round so the surface is covered from different directions; agents still report any serious weakness they see. Ids must stay unique. Edit freely — add an angle and the dealer uses it.",
+  "angles": [
+    {"id": "injection", "name": "Injection", "how": "Trace every place user input reaches an interpreter: SQL/NoSQL queries, shell/OS commands, template engines, LDAP, XPath, eval-like calls. Look for string concatenation into a sink instead of parameterization or escaping."},
+    {"id": "access-control", "name": "Broken access control", "how": "Check every protected action: can a user reach another user's object by changing an id (IDOR), hit an admin route without the role, or skip an ownership check? Look for missing or after-the-fact authorization."},
+    {"id": "auth-session", "name": "Authentication & sessions", "how": "Review login, signup, password reset, token and session handling: weak hashing, missing rate limits, predictable tokens, tokens that never expire, secrets compared non-constant-time, session fixation, missing re-auth on sensitive actions."},
+    {"id": "ssrf-filesystem", "name": "SSRF & file/path", "how": "Any user-controlled URL, host, path or filename: server-side request forgery to internal services, path traversal, arbitrary file read/write, unsafe upload (type/location/execution), zip/path handling."},
+    {"id": "data-exposure", "name": "Data exposure & secrets", "how": "Hard-coded secrets/keys/tokens, secrets in logs or error messages, sensitive data over-returned by an API (mass over-fetch), missing output encoding leading to XSS, verbose errors, debug mode on, insecure CORS, missing security headers."},
+    {"id": "deserialization-parsing", "name": "Deserialization & parsing", "how": "Untrusted data fed to pickle/yaml.load/Marshal/native deserializers, XML without entity protection (XXE), prototype pollution, unsafe JSON-to-object mapping (mass assignment), and parser resource exhaustion."},
+    {"id": "logic-race", "name": "Business logic & races", "how": "Workflow abuse: steps skipped or replayed, negative/overflow quantities, price or role tampering, TOCTOU and concurrency races on shared state (balances, stock, limits), idempotency and double-submit issues."},
+    {"id": "dependencies-config", "name": "Dependencies & config", "how": "Manifest and lockfile: known-vulnerable or abandoned packages, dangerous default config, over-broad permissions/scopes, exposed management endpoints, insecure transport, missing input size/time limits enabling DoS."}
+  ]
+}

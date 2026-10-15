@@ -15,6 +15,7 @@ README.*
 | dossier | commande | en bref |
 |---|---|---|
 | [`Debat/`](Debat/) | `/debat` | Fait débattre plusieurs agents Claude jusqu'à obtenir la meilleure réponse possible. |
+| [`Purple/`](Purple/) | `/purple` | Durcit la sécurité d'un projet en boucle, jusqu'à ce que les attaques automatiques ne trouvent plus rien. |
 
 ### [Débat](Debat/) — `/debat`
 
@@ -27,6 +28,19 @@ Trois modes (`--eco`, par défaut, `--max`). Le débat est enregistré sur le di
 repris s'il est interrompu.
 
 [Documentation de Débat](Debat/README.md)
+
+### [Purple](Purple/) — `/purple`
+
+Du durcissement de sécurité en boucle sur un projet qui t'appartient. Des agents rouges
+cherchent des failles atteignables, un juge les confirme et les note, des agents bleus
+réécrivent le code pour les corriger, et un juge vérifie que chaque faille est fermée sans
+casser les tests. Au tour suivant, les rouges attaquent le code corrigé. Ça s'arrête quand un
+tour ne trouve plus rien.
+
+Tout se passe en local, sur une copie du projet ; l'original n'est jamais modifié, et rien ne
+sort sur le réseau. À la fin : le code durci, un test par faille corrigée, et un rapport.
+
+[Documentation de Purple](Purple/README.md)
 
 ## Installer une skill
 
