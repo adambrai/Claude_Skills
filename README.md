@@ -20,6 +20,7 @@ README.*
 | [`Gomme/`](Gomme/) | `/gomme` | Aide à réduire tes traces en ligne : trouver les pages, rédiger les demandes RGPD, suivre les délais. |
 | [`Rouage/`](Rouage/) | `/rouage` | Explique comment marche une appli à partir de son code ou de son build, avec les lignes qui le prouvent. |
 | [`Aegis/`](Aegis/) | `/aegis` | Cadre une session de sécurité (périmètre, autorisation, but défensif) pour étudier ou travailler proprement. |
+| [`Vitrine/`](Vitrine/) | `/vitrine` | Conçoit une interface web en cinq étapes validées une à une, avec captures en bureau et à 375 px, puis un audit. |
 
 ### [Débat](Debat/) — `/debat`
 
