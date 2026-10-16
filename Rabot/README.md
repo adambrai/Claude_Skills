@@ -39,6 +39,14 @@ descriptions, page 404, mentions légales réelles, version mobile à 375 px, ba
 cookies avec un vrai refus) et les points de sécurité de base. Elle liste ce qui manque
 avec le fichier à changer, et ne touche à rien sans ton accord.
 
+## La charte
+
+`charte.md` contient des règles courtes à garder en permanence : comment écrire, quels choix
+éviter sur un site, et les règles de sécurité de base pour le code. Avec `/rabot charte`, la
+skill te la montre et l'ajoute à ton `CLAUDE.md` si tu es d'accord. Tu peux aussi la coller
+dans les préférences personnelles de Claude, pour qu'elle s'applique à toutes tes
+conversations.
+
 ## Ce que ce n'est pas
 
 C'est un outil de relecture. Il ne sert pas à cacher qu'une IA a aidé à écrire un texte :
@@ -49,7 +57,7 @@ si ton école, ton client ou ton journal demande de le dire, c'est à toi de le 
 ```bash
 git clone https://github.com/adambrai/Claude_Skills.git
 mkdir -p ~/.claude/skills/rabot
-cp Claude_Skills/Rabot/{SKILL.md,slopcheck.py} ~/.claude/skills/rabot/
+cp Claude_Skills/Rabot/{SKILL.md,slopcheck.py,charte.md} ~/.claude/skills/rabot/
 ```
 
 ## Tests

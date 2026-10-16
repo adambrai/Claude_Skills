@@ -77,6 +77,14 @@ user approves.
   server-side auth checks, ownership checks on every object id, rate limiting on
   login and public forms. For a real security pass, hand over to `/purple`.
 
+## Charter mode (`charte`)
+
+`charte.md` holds a short set of permanent writing, site and code rules between
+`<!-- rabot:start -->` and `<!-- rabot:end -->` markers. On `/rabot charte`, show it to
+the user and, only with their OK, add it to the project's `CLAUDE.md` (or replace an
+existing block between the same markers, leaving the rest of the file untouched). It
+can also be pasted into Claude's personal preferences.
+
 ## Rules
 
 - Meaning, facts and voice first; style second.
