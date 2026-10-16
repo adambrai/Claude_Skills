@@ -62,5 +62,91 @@ class SlopcheckTests(unittest.TestCase):
             os.unlink(f.name)
 
 
+    # --- checks added later ---
+
+    def test_french_dash_flagged_strictly(self):
+        self.assertIn("dash", self.kinds("Le fichier est prêt—il manque le test pour la suite de ce travail."))
+        self.assertIn("dash", self.kinds("Le fichier est prêt et il manque le test pour la suite. Voilà —\nfin de la phrase."))
+
+    def test_french_dialogue_dash_at_line_start_is_left_alone(self):
+        self.assertNotIn("dash", self.kinds("— Tu viens avec nous ce soir, dans la salle ?\n— Oui, je viens avec vous."))
+
+    def test_french_dash_weighs_more_than_english(self):
+        fr = slopcheck.analyse("Le test est écrit — et il passe sur la machine de Paul pour une fois.")
+        en = slopcheck.analyse("The test is written \u2014 and it passes on the machine that Paul has for once.")
+        self.assertLess(fr["score"], en["score"])
+
+    def test_restating_question_openers(self):
+        for t in ("Tu veux savoir comment lancer les tests ? Lance la commande.",
+                  "Votre question porte sur le déploiement. Voici la réponse.",
+                  "You want to know how to run the tests. Run the command.",
+                  "Pour répondre à ta question, il faut lire le fichier.",
+                  "Voici un aperçu des options disponibles."):
+            self.assertIn("opener", self.kinds(t), t)
+
+    def test_opener_skips_leading_heading_and_reports_line(self):
+        r = slopcheck.analyse("# Titre\n\nBonne question ! Voici.\n")
+        self.assertEqual([f["line"] for f in r["findings"] if f["kind"] == "opener"], [3])
+
+    def test_plain_opener_is_not_flagged(self):
+        self.assertNotIn("opener", self.kinds("Lance `make test`. Les trois cas passent."))
+
+    def test_new_marker_words(self):
+        self.assertIn("marker", self.kinds("Explorons ensemble le sujet du jour."))
+        self.assertIn("marker", self.kinds("Le paysage des outils change vite."))
+
+    def test_new_hedges(self):
+        self.assertIn("hedge", self.kinds("Cela pourrait potentiellement casser le build."))
+        self.assertIn("hedge", self.kinds("Il semblerait que le test échoue."))
+
+    def test_curly_quotes_in_plain_english_flagged(self):
+        t = "He said \u201cstop\u201d and left. It\u2019s done, and we do not need more."
+        self.assertIn("curly", self.kinds(t))
+
+    def test_curly_quotes_ignored_in_french(self):
+        t = "Il a dit « stop » et il est parti. C\u2019est fini pour aujourd\u2019hui, et nous avons fini."
+        self.assertNotIn("curly", self.kinds(t))
+
+    def test_curly_quotes_ignored_when_text_has_other_typography(self):
+        t = "He said \u201cstop\u201d and left\u2026 It\u2019s done, and we have a caf\u00e9 near the park."
+        self.assertNotIn("curly", self.kinds(t))
+
+    def test_straight_quotes_not_flagged(self):
+        self.assertNotIn("curly", self.kinds('He said "stop" and left. It\'s done, and we have time.'))
+
+    def test_language_detection(self):
+        self.assertEqual(slopcheck.detect_lang("Le chat est sur la table et il dort."), "fr")
+        self.assertEqual(slopcheck.detect_lang("The cat is on the table and it sleeps."), "en")
+
+    def test_suggestions_for_every_kind(self):
+        for kind in slopcheck.KIND_FIX:
+            self.assertTrue(slopcheck.suggest({"kind": kind, "match": "x"}))
+        self.assertIn("solide", slopcheck.suggest({"kind": "marker", "match": "robuste"}))
+
+    def run_cli(self, *extra):
+        import contextlib, io, tempfile
+        with tempfile.NamedTemporaryFile("w", suffix=".md", delete=False, encoding="utf-8") as f:
+            f.write(FORMULAIC)
+        try:
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                slopcheck.main([f.name, *extra])
+            return buf.getvalue()
+        finally:
+            os.unlink(f.name)
+
+    def test_cli_fix_suggestions_output(self):
+        self.assertIn("->", self.run_cli("--fix-suggestions"))
+        self.assertNotIn("->", self.run_cli())
+        self.assertIn('"suggestion"', self.run_cli("--json", "--fix-suggestions"))
+
+    def test_five_families_are_noticeable(self):
+        r = slopcheck.analyse(FORMULAIC)
+        self.assertTrue(r["noticeable"])
+        self.assertGreaterEqual(len(r["families"]), 5)
+        self.assertFalse(slopcheck.analyse(PLAIN)["noticeable"])
+        self.assertIn("lecteur averti", self.run_cli())
+
+
 if __name__ == "__main__":
     unittest.main()

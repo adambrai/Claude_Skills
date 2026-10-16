@@ -274,6 +274,90 @@ class CliTests(Base):
             self.assertEqual(audit_skill.main([os.path.join(self.dir, "nope")]), 2)
 
 
+def _skill(name="ok", desc="Does a thing. Use when asked.", extra=""):
+    return f"---\nname: {name}\ndescription: {desc}\n{extra}---\n\n# {name}\n"
+
+
+class CheckInstall(Base):
+    def test_root_skill_ok(self):
+        self.put("SKILL.md", _skill())
+        r = audit_skill.check_install(self.dir)
+        self.assertTrue(r["installable"])
+        self.assertEqual(r["skills"][0]["name"], "ok")
+
+    def test_skills_dir_and_curated(self):
+        self.put("skills/a/SKILL.md", _skill("a"))
+        self.put("skills/.curated/b/SKILL.md", _skill("b"))
+        self.put(".claude/skills/c/SKILL.md", _skill("c"))
+        r = audit_skill.check_install(self.dir)
+        self.assertEqual(sorted(s["name"] for s in r["skills"]), ["a", "b", "c"])
+        self.assertTrue(r["installable"])
+
+    def test_missing_frontmatter_and_description(self):
+        self.put("skills/a/SKILL.md", "# nothing\n")
+        self.put("skills/b/SKILL.md", "---\nname: b\n---\n")
+        r = audit_skill.check_install(self.dir)
+        self.assertFalse(r["installable"])
+        self.assertGreaterEqual(r["errors"], 2)
+
+    def test_internal_flag(self):
+        self.put("skills/a/SKILL.md", _skill("a", extra="metadata:\n  internal: true\n"))
+        r = audit_skill.check_install(self.dir)
+        self.assertTrue(r["skills"][0]["internal"])
+        self.assertTrue(any("INSTALL_INTERNAL_SKILLS" in p["message"] for p in r["problems"]))
+
+    def test_bad_name_and_duplicates(self):
+        self.put("skills/a/SKILL.md", _skill("Bad Name"))
+        self.put("skills/x/SKILL.md", _skill("same"))
+        self.put("skills/y/SKILL.md", _skill("same"))
+        r = audit_skill.check_install(self.dir)
+        msgs = " ".join(p["message"] for p in r["problems"]) + str(r["skills"])
+        self.assertIn("plusieurs", msgs)
+        self.assertIn("minuscules", msgs)
+
+    def test_recursive_fallback_and_depth(self):
+        self.put("misc/deep/tool/SKILL.md", _skill("deep"))
+        self.assertEqual(audit_skill.check_install(self.dir)["skills"][0]["name"], "deep")
+        self.put("misc/a/b/c/d/e/f/g/h/i/j/SKILL.md", _skill("toodeep"))
+        self.assertNotIn("toodeep", [s["name"] for s in audit_skill.check_install(self.dir)["skills"]])
+        self.assertIn("toodeep", [s["name"] for s in audit_skill.check_install(self.dir, full_depth=True)["skills"]])
+
+    def test_manifest_paths(self):
+        self.put("tools/x/SKILL.md", _skill("x"))
+        self.put(".claude-plugin/marketplace.json",
+                 json.dumps({"plugins": [{"name": "p", "source": "./", "skills": ["./tools/x", "../out"]}]}))
+        r = audit_skill.check_install(self.dir)
+        self.assertEqual([s["name"] for s in r["skills"]], ["x"])
+        self.assertFalse(r["installable"])  # path escaping the repo is an error
+
+    def test_empty_repo(self):
+        r = audit_skill.check_install(self.dir)
+        self.assertFalse(r["installable"])
+
+    def test_symlinked_skill_not_followed(self):
+        outside = os.path.join(self.tmp.name, "outside")
+        os.makedirs(outside)
+        with open(os.path.join(outside, "SKILL.md"), "w") as f:
+            f.write(_skill("evil"))
+        os.makedirs(os.path.join(self.dir, "skills"))
+        os.symlink(outside, os.path.join(self.dir, "skills", "evil"))
+        self.assertEqual(audit_skill.check_install(self.dir)["skills"], [])
+
+    def test_cli_exit_codes(self):
+        self.put("SKILL.md", _skill())
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(audit_skill.main([self.dir, "--check-install"]), 0)
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            self.assertEqual(audit_skill.main([self.dir, "--check-install", "--json"]), 0)
+        self.assertTrue(json.loads(buf.getvalue())["installable"])
+        os.remove(os.path.join(self.dir, "SKILL.md"))
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(audit_skill.main([self.dir, "--check-install"]), 1)
+        with redirect_stdout(io.StringIO()), unittest.mock.patch("sys.stderr", io.StringIO()):
+            self.assertEqual(audit_skill.main([os.path.join(self.dir, "nope"), "--check-install"]), 2)
+
+
 import unittest.mock  # noqa: E402
 
 if __name__ == "__main__":

@@ -106,6 +106,30 @@ class AuditContextTests(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertEqual(json.loads(buf.getvalue())["project"], os.path.abspath(self.project))
 
+    def test_save_then_compare_shows_the_drop(self):
+        write(os.path.join(self.project, "CLAUDE.md"), "règle\n" * 1000)
+        snap = os.path.join(self.tmp.name, "before.json")
+        with redirect_stdout(io.StringIO()):
+            self.assertEqual(audit_context.main([self.project, "--save", snap]), 0)
+        before = json.load(open(snap, encoding="utf-8"))
+        self.assertGreater(before["memory_tokens"], 0)
+        write(os.path.join(self.project, "CLAUDE.md"), "règle\n")
+        buf = io.StringIO()
+        with redirect_stdout(buf):
+            self.assertEqual(audit_context.main([self.project, "--compare", snap]), 0)
+        out = buf.getvalue()
+        self.assertIn("Mémoire chargée", out)
+        self.assertIn("-", out.split("Mémoire chargée")[1].splitlines()[0])
+
+    def test_compare_with_missing_snapshot_fails(self):
+        with redirect_stdout(io.StringIO()):
+            code = audit_context.main([self.project, "--compare", os.path.join(self.tmp.name, "nope.json")])
+        self.assertEqual(code, 2)
+
+    def test_compare_function_handles_zero_before(self):
+        lines = audit_context.compare({}, {"memory_tokens": 10})
+        self.assertTrue(any("0 -> 10 (+10)" in l for l in lines))
+
 
 BLOCK = "<!-- fourmi:start -->\n## Bloc\n- règle\n<!-- fourmi:end -->\n"
 
@@ -142,7 +166,8 @@ class MergeBlockTests(unittest.TestCase):
             merge_block.merge("x", "pas de marqueurs\n")
 
     def test_shipped_blocks_are_valid(self):
-        for name in ("claude-md-block.md", "delegation-line.md"):
+        for name in ("claude-md-block.md", "claude-md-block.en.md", "claude-md-web.md",
+                     "claude-md-web.en.md", "delegation-line.md", "delegation-line.en.md"):
             with open(os.path.join(HERE, name), encoding="utf-8") as f:
                 merge_block.merge("", f.read())
 
@@ -174,6 +199,44 @@ class AgentFileTests(unittest.TestCase):
         self.assertIn("name: ouvriere", head)
         self.assertIn("model: haiku", head)
         self.assertIn("tools: Read, Grep, Glob, Bash, Edit", head)
+
+    def test_english_blocks_share_markers_with_french_ones(self):
+        pairs = (("claude-md-block.md", "claude-md-block.en.md", "fourmi"),
+                 ("claude-md-web.md", "claude-md-web.en.md", "fourmi-web"),
+                 ("delegation-line.md", "delegation-line.en.md", "fourmi-agent"))
+        for fr, en, name in pairs:
+            for f in (fr, en):
+                text = open(os.path.join(HERE, f), encoding="utf-8").read()
+                self.assertTrue(text.startswith(f"<!-- {name}:start -->"), f)
+                self.assertIn(f"<!-- {name}:end -->", text)
+
+    def test_english_block_replaces_french_block(self):
+        fr = open(os.path.join(HERE, "claude-md-block.md"), encoding="utf-8").read()
+        en = open(os.path.join(HERE, "claude-md-block.en.md"), encoding="utf-8").read()
+        out = merge_block.merge(merge_block.merge("Texte\n", fr), en)
+        self.assertEqual(out.count("fourmi:start"), 1)
+        self.assertIn("Texte", out)
+        self.assertIn("haiku", out)
+
+    def test_blocks_cover_routing_rules(self):
+        for f in ("claude-md-block.md", "claude-md-block.en.md"):
+            text = open(os.path.join(HERE, f), encoding="utf-8").read().lower()
+            for word in ("haiku", "sonnet", "opus", "model"):
+                self.assertIn(word, text, f)
+
+    def test_web_blocks_mention_models_and_single_validation(self):
+        for f in ("claude-md-web.md", "claude-md-web.en.md"):
+            text = open(os.path.join(HERE, f), encoding="utf-8").read().lower()
+            for word in ("haiku", "sonnet", "opus", "seo"):
+                self.assertIn(word, text, f)
+
+
+class AgentFileExtraTests(unittest.TestCase):
+    def test_agent_has_description_and_hands_back(self):
+        text = open(os.path.join(HERE, "agent-ouvriere.md"), encoding="utf-8").read()
+        self.assertIn("description:", text)
+        self.assertIn("Use proactively", text)
+        self.assertIn("Hand back", text)
 
 
 if __name__ == "__main__":

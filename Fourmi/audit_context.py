@@ -4,6 +4,8 @@ every turn, and what could be trimmed.
 
 Usage:
   python3 audit_context.py [PROJECT_DIR] [--json]
+  python3 audit_context.py [PROJECT_DIR] --save before.json      # keep a snapshot
+  python3 audit_context.py [PROJECT_DIR] --compare before.json   # show the change
 
 Looks at: CLAUDE.md files (global, project, local, and @imports), skills and their
 descriptions, MCP servers, enabled plugins, and large files an agent could read by
@@ -185,12 +187,51 @@ def audit(project):
             "mcp_servers": mcp, "plugins": pl, "big_files": big, "deny_rules": deny, "advice": advice}
 
 
+COMPARED = (("memory_tokens", "Mémoire chargée à chaque message (tokens)"),
+            ("skill_description_tokens", "Descriptions de skills (tokens)"),
+            ("skills", "Skills"))
+
+
+def snapshot_value(report, key):
+    return report.get(key, 0) or 0
+
+
+def compare(before, after):
+    """Return printable lines comparing two audit reports (before, after)."""
+    rows = [(label, snapshot_value(before, k), snapshot_value(after, k)) for k, label in COMPARED]
+    rows.append(("Serveurs MCP", len(before.get("mcp_servers") or []), len(after.get("mcp_servers") or [])))
+    rows.append(("Plugins activés", len(before.get("plugins") or []), len(after.get("plugins") or [])))
+    rows.append(("Gros fichiers", len(before.get("big_files") or []), len(after.get("big_files") or [])))
+    rows.append(("Règles permissions.deny", len(before.get("deny_rules") or []), len(after.get("deny_rules") or [])))
+    lines = []
+    for label, b, a in rows:
+        d = a - b
+        pct = f" ({d / b * 100:+.0f} %)" if b else ""
+        lines.append(f"  {label} : {b} -> {a} ({d:+d}){pct}")
+    return lines
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("project", nargs="?", default=".")
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--save", metavar="FILE", help="write the report as JSON to FILE (a 'before' snapshot)")
+    ap.add_argument("--compare", metavar="FILE", help="compare with a snapshot made by --save")
     a = ap.parse_args(argv)
     r = audit(a.project)
+    if a.save:
+        with open(os.path.expanduser(a.save), "w", encoding="utf-8") as f:
+            json.dump(r, f, indent=2, ensure_ascii=False)
+        print(f"Instantané écrit : {a.save} (~{r['memory_tokens']} tokens chargés à chaque message)")
+        return 0
+    if a.compare:
+        before = load_json(os.path.expanduser(a.compare))
+        if not before:
+            print(f"Instantané vide ou illisible : {a.compare}", file=sys.stderr)
+            return 2
+        print("Avant -> après (estimations, environ 4 caractères par token) :")
+        print("\n".join(compare(before, r)))
+        return 0
     if a.json:
         print(json.dumps(r, indent=2, ensure_ascii=False))
         return 0

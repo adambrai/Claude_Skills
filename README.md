@@ -24,7 +24,7 @@ README.*
 | [`Fourmi/`](Fourmi/) | `/fourmi` | Mesure ce qu'un projet charge dans le contexte et propose de quoi dépenser moins de tokens. |
 | [`Douane/`](Douane/) | `/douane` | Inspecte une skill trouvée ailleurs avant de l'installer, sans jamais exécuter ses fichiers. |
 
-### [Débat](Debat/) — `/debat`
+### [Débat](Debat/) : `/debat`
 
 Plusieurs agents traitent la même tâche, chacun avec une façon de raisonner différente. Les
 réponses sont triées, s'affrontent en duels, puis les finalistes se corrigent entre eux
@@ -36,7 +36,7 @@ repris s'il est interrompu.
 
 [Documentation de Débat](Debat/README.md)
 
-### [Purple](Purple/) — `/purple`
+### [Purple](Purple/) : `/purple`
 
 Du durcissement de sécurité en boucle sur un projet qui t'appartient. Des agents rouges
 cherchent des failles atteignables, un juge les confirme et les note, des agents bleus
@@ -49,7 +49,7 @@ sort sur le réseau. À la fin : le code durci, un test par faille corrigée, et
 
 [Documentation de Purple](Purple/README.md)
 
-### [Aegis](Aegis/) — `/aegis`
+### [Aegis](Aegis/) : `/aegis`
 
 Pose le cadre d'un travail de sécurité avant de commencer : la cible et son périmètre, la base
 d'autorisation (ton code, ton lab, un CTF), l'objectif défensif ou pédagogique, et les règles.
@@ -71,6 +71,9 @@ Installe la skill Debat de ce dépôt, puis vérifie qu'elle marche.
 À la main : copie le dossier de la skill dans `~/.claude/skills/<nom>/` (pour toutes tes
 sessions) ou dans `.claude/skills/<nom>/` d'un projet (pour ce projet seulement). Le README
 de chaque skill donne la commande exacte.
+
+La charte de travail utilisée par `/rabot charte` est dans un dépôt à part :
+[Garde-fou](https://github.com/adambrai/Garde-fou).
 
 ## Licence
 

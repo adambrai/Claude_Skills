@@ -4,6 +4,7 @@ installing it.
 
 Usage:
   python3 audit_skill.py PATH [--json]
+  python3 audit_skill.py PATH --check-install [--full-depth] [--json]
 
 PATH is a skill folder, a folder containing several skills, or a single SKILL.md.
 Reports what the skill contains and anything that deserves a human look before it
@@ -11,6 +12,10 @@ runs on your machine: executable scripts, commands that download and run code,
 access to credential files, instructions that tell the agent to act without asking,
 hidden characters, encoded blobs, and broad tool permissions. Standard library only.
 It reads files; it never runs them.
+
+With --check-install, instead checks that a repo or folder can be installed with the
+`npx skills` tool: every skill has a SKILL.md with name and description in its YAML
+header, and sits where the tool looks for it. It lists the skills it would find.
 
 Exit code: 0 if nothing high was found, 1 if at least one high finding, 2 on error.
 """
@@ -336,11 +341,160 @@ def audit(root):
             "counts": counts, "verdict": verdict}
 
 
+# Where `npx skills` looks for skills, relative to the repo root.
+DISCOVERY_DIRS = ["skills", "skills/.curated", ".claude/skills", ".agents/skills", ".codex/skills",
+                  ".cursor/skills", ".gemini/skills", ".github/skills", ".windsurf/skills",
+                  ".opencode/skills", ".goose/skills", ".roo/skills", ".kiro/skills"]
+MANIFESTS = [".claude-plugin/marketplace.json", ".claude-plugin/plugin.json", "plugin.json"]
+NAME_RE = re.compile(r"^[a-z0-9][a-z0-9-]*$")
+
+
+def _inside(root, path):
+    real = os.path.realpath(path)
+    return real == root or real.startswith(root + os.sep)
+
+
+def _skill_dirs_under(base, root, max_depth):
+    """Folders holding a SKILL.md at most max_depth levels below base (symlinks not followed)."""
+    found = []
+    if not os.path.isdir(base) or os.path.islink(base):
+        return found
+    base_depth = base.rstrip(os.sep).count(os.sep)
+    for dirpath, dirs, names in os.walk(base, followlinks=False):
+        dirs[:] = sorted(d for d in dirs if d not in SKIP_DIRS and not os.path.islink(os.path.join(dirpath, d)))
+        depth = dirpath.rstrip(os.sep).count(os.sep) - base_depth
+        if "SKILL.md" in names and not os.path.islink(os.path.join(dirpath, "SKILL.md")):
+            found.append(dirpath)
+        if depth >= max_depth:
+            dirs[:] = []
+    return found
+
+
+def _manifest_dirs(root):
+    """Skill folders declared in marketplace.json / plugin.json (paths must stay inside root)."""
+    out, problems = [], []
+    for rel in MANIFESTS:
+        mp = os.path.join(root, rel)
+        if not os.path.isfile(mp) or os.path.islink(mp):
+            continue
+        try:
+            with open(mp, encoding="utf-8") as f:
+                data = json.load(f)
+        except (OSError, ValueError):
+            problems.append(("error", f"{rel} : JSON invalide ou illisible"))
+            continue
+        entries = [data] if isinstance(data, dict) else []
+        if isinstance(data, dict) and isinstance(data.get("plugins"), list):
+            entries += [e for e in data["plugins"] if isinstance(e, dict)]
+        for e in entries:
+            src = e.get("source")
+            plugin_root = os.path.normpath(os.path.join(root, src)) if isinstance(src, str) else root
+            skills = e.get("skills")
+            for sk in skills if isinstance(skills, list) else []:
+                if not isinstance(sk, str):
+                    continue
+                d = os.path.normpath(os.path.join(plugin_root, sk))
+                if not _inside(root, d):
+                    problems.append(("error", f"{rel} : le chemin « {sk} » sort du dépôt"))
+                elif os.path.isfile(os.path.join(d, "SKILL.md")):
+                    out.append(d)
+                else:
+                    problems.append(("warning", f"{rel} : « {sk} » ne contient pas de SKILL.md"))
+    return out, problems
+
+
+def check_install(root, full_depth=False):
+    """Check that a repo can be installed with `npx skills`. Reads only, never runs anything."""
+    root = os.path.realpath(os.path.expanduser(root))
+    if not os.path.isdir(root):
+        raise FileNotFoundError(root)
+    problems = []
+    dirs = []
+    if os.path.isfile(os.path.join(root, "SKILL.md")):
+        dirs.append(root)
+    for rel in DISCOVERY_DIRS:
+        dirs += _skill_dirs_under(os.path.join(root, *rel.split("/")), root, 3)
+    md, mp = _manifest_dirs(root)
+    dirs += md
+    problems += mp
+    if full_depth or not dirs:
+        dirs += _skill_dirs_under(root, root, 99 if full_depth else 8)
+        if not full_depth and dirs:
+            problems.append(("info", "aucun dossier standard : skills trouvées par recherche récursive"))
+    seen, skills, names = set(), [], {}
+    for d in dirs:
+        d = os.path.realpath(d)
+        if d in seen or not _inside(root, d):
+            continue
+        seen.add(d)
+        rel = os.path.relpath(d, root)
+        rel = "." if rel == "." else rel
+        try:
+            text = read_bytes(os.path.join(d, "SKILL.md")).decode("utf-8", "replace")
+        except OSError:
+            problems.append(("error", f"{rel} : SKILL.md illisible"))
+            continue
+        fm, _ = frontmatter(text)
+        block = text[3:text.find("\n---", 3)] if fm else ""
+        internal = bool(re.search(r"^\s+internal:\s*true\b", block, re.M | re.I))
+        issues = []
+        if not fm:
+            issues.append(("error", "pas d'en-tête YAML (entre deux lignes ---)"))
+        else:
+            if not fm.get("name"):
+                issues.append(("error", "champ name absent"))
+            elif not NAME_RE.match(fm["name"].strip("\"'")):
+                issues.append(("warning", f"name « {fm['name']} » : minuscules, chiffres et tirets attendus"))
+            if not fm.get("description") or fm["description"] in (">-", ">", "|", "|-"):
+                issues.append(("error", "champ description absent ou vide"))
+        name = fm.get("name", "").strip("\"'")
+        if name:
+            names.setdefault(name, []).append(rel)
+        skills.append({"dir": rel, "name": name, "internal": internal,
+                       "issues": [{"level": l, "message": m} for l, m in issues]})
+    for name, where in names.items():
+        if len(where) > 1:
+            problems.append(("warning", f"nom « {name} » utilisé par plusieurs skills : " + ", ".join(where)))
+    if not skills:
+        problems.append(("error", "aucune skill trouvée : il faut un dossier avec un SKILL.md "
+                                  "(dans skills/, skills/.curated/, un dossier d'agent, ou un manifeste)"))
+    errors = sum(1 for s in skills for i in s["issues"] if i["level"] == "error") + \
+        sum(1 for l, _ in problems if l == "error")
+    visible = [s for s in skills if not s["internal"]]
+    if skills and not visible:
+        problems.append(("warning", "toutes les skills sont internal : cachées sauf avec INSTALL_INTERNAL_SKILLS=1"))
+    return {"path": root, "skills": skills, "problems": [{"level": l, "message": m} for l, m in problems],
+            "errors": errors, "installable": errors == 0 and bool(skills)}
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("path")
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--check-install", action="store_true",
+                    help="check that the folder can be installed with `npx skills`")
+    ap.add_argument("--full-depth", action="store_true", help="with --check-install: search every level")
     a = ap.parse_args(argv)
+    if a.check_install:
+        try:
+            r = check_install(a.path, a.full_depth)
+        except FileNotFoundError:
+            print(f"Introuvable ou pas un dossier : {a.path}", file=sys.stderr)
+            return 2
+        if a.json:
+            print(json.dumps(r, indent=2, ensure_ascii=True))
+        else:
+            print(f"Vérification d'installation : {r['path']}")
+            for s in r["skills"]:
+                tag = " (internal)" if s["internal"] else ""
+                print(f"  skill « {s['name'] or '?'} » ({s['dir']}){tag}")
+                for i in s["issues"]:
+                    print(f"      {i['level']} : {i['message']}")
+            for p in r["problems"]:
+                print(f"  {p['level']} : {p['message']}")
+            print("\nInstallable avec npx skills." if r["installable"] else
+                  f"\nPas installable en l'état : {r['errors']} erreur(s).")
+        return 0 if r["installable"] else 1
     try:
         r = audit(a.path)
     except FileNotFoundError:
