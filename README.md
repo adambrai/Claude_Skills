@@ -18,6 +18,7 @@ README.*
 | [`Purple/`](Purple/) | `/purple` | Durcit la sécurité d'un projet en boucle, jusqu'à ce que les attaques automatiques ne trouvent plus rien. |
 | [`Rabot/`](Rabot/) | `/rabot` | Relit un texte et enlève ce qui l'alourdit, avec un vérificateur qui note le texte sur 100. |
 | [`Gomme/`](Gomme/) | `/gomme` | Aide à réduire tes traces en ligne : trouver les pages, rédiger les demandes RGPD, suivre les délais. |
+| [`Rouage/`](Rouage/) | `/rouage` | Explique comment marche une appli à partir de son code ou de son build, avec les lignes qui le prouvent. |
 | [`Aegis/`](Aegis/) | `/aegis` | Cadre une session de sécurité (périmètre, autorisation, but défensif) pour étudier ou travailler proprement. |
 
 ### [Débat](Debat/) — `/debat`
