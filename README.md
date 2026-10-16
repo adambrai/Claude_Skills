@@ -22,6 +22,7 @@ README.*
 | [`Aegis/`](Aegis/) | `/aegis` | Cadre une session de sécurité (périmètre, autorisation, but défensif) pour étudier ou travailler proprement. |
 | [`Vitrine/`](Vitrine/) | `/vitrine` | Conçoit une interface web en cinq étapes validées une à une, avec captures en bureau et à 375 px, puis un audit. |
 | [`Fourmi/`](Fourmi/) | `/fourmi` | Mesure ce qu'un projet charge dans le contexte et propose de quoi dépenser moins de tokens. |
+| [`Douane/`](Douane/) | `/douane` | Inspecte une skill trouvée ailleurs avant de l'installer, sans jamais exécuter ses fichiers. |
 
 ### [Débat](Debat/) — `/debat`
 
