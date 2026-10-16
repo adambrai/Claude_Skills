@@ -44,16 +44,16 @@ destructeur, et ton projet d'origine n'est jamais modifié.
 Dans Claude Code :
 
 ```
-https://github.com/adambrai/Claud_Skills
+https://github.com/adambrai/Claude_Skills
 Installe la skill Purple de ce dépôt dans ~/.claude/skills/purple, puis vérifie que /purple marche.
 ```
 
 Ou à la main :
 
 ```bash
-git clone https://github.com/adambrai/Claud_Skills.git
+git clone https://github.com/adambrai/Claude_Skills.git
 mkdir -p ~/.claude/skills/purple
-cp Claud_Skills/Purple/{SKILL.md,purple.py,templates.md,rubric.md,angles.json} ~/.claude/skills/purple/
+cp Claude_Skills/Purple/{SKILL.md,purple.py,templates.md,rubric.md,angles.json} ~/.claude/skills/purple/
 ```
 
 Il faut Claude Code et Python 3.8 ou plus récent. Pas de dépendance à installer.

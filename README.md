@@ -59,7 +59,7 @@ puis passe le relais aux skills plus profondes.
 Le plus simple, dans Claude Code :
 
 ```
-https://github.com/adambrai/Claud_Skills
+https://github.com/adambrai/Claude_Skills
 Installe la skill Debat de ce dépôt, puis vérifie qu'elle marche.
 ```
 

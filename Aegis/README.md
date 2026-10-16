@@ -38,16 +38,16 @@ Tu peux garder la charte dans un fichier `AEGIS.md` à la racine du projet.
 Dans Claude Code :
 
 ```
-https://github.com/adambrai/Claud_Skills
+https://github.com/adambrai/Claude_Skills
 Installe la skill Aegis de ce dépôt dans ~/.claude/skills/aegis, puis vérifie que /aegis marche.
 ```
 
 Ou à la main :
 
 ```bash
-git clone https://github.com/adambrai/Claud_Skills.git
+git clone https://github.com/adambrai/Claude_Skills.git
 mkdir -p ~/.claude/skills/aegis
-cp Claud_Skills/Aegis/SKILL.md ~/.claude/skills/aegis/
+cp Claude_Skills/Aegis/SKILL.md ~/.claude/skills/aegis/
 ```
 
 Il faut Claude Code. La skill est un simple jeu d'instructions, sans script ni

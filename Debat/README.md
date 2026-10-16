@@ -43,16 +43,16 @@ Quelques règles qui s'appliquent partout :
 Dans Claude Code :
 
 ```
-https://github.com/adambrai/Claud_Skills
+https://github.com/adambrai/Claude_Skills
 Installe la skill Debat de ce dépôt dans ~/.claude/skills/debat, puis vérifie que /debat marche.
 ```
 
 Ou à la main :
 
 ```bash
-git clone https://github.com/adambrai/Claud_Skills.git
+git clone https://github.com/adambrai/Claude_Skills.git
 mkdir -p ~/.claude/skills/debat
-cp Claud_Skills/Debat/{SKILL.md,debat.py,templates.md,cards.json,rubric.md} ~/.claude/skills/debat/
+cp Claude_Skills/Debat/{SKILL.md,debat.py,templates.md,cards.json,rubric.md} ~/.claude/skills/debat/
 ```
 
 Il faut Claude Code et Python 3.8 ou plus récent. Pas de dépendance à installer.

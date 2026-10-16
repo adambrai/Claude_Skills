@@ -47,9 +47,9 @@ si ton école, ton client ou ton journal demande de le dire, c'est à toi de le 
 ## Installation
 
 ```bash
-git clone https://github.com/adambrai/Claud_Skills.git
+git clone https://github.com/adambrai/Claude_Skills.git
 mkdir -p ~/.claude/skills/rabot
-cp Claud_Skills/Rabot/{SKILL.md,slopcheck.py} ~/.claude/skills/rabot/
+cp Claude_Skills/Rabot/{SKILL.md,slopcheck.py} ~/.claude/skills/rabot/
 ```
 
 ## Tests
