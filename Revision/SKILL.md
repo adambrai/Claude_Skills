@@ -101,6 +101,41 @@ Le dire avec une justification courte, sans prétendre à la certitude.
 S'il n'y a aucune annale : le dire, et prioriser d'après le poids dans le cours, les
 TD (ce qu'on fait en TD tombe souvent) et les consignes du prof.
 
+## 2 bis. Tri : blabla ou essentiel
+
+Les cours (surtout les slides) sont pleins de remplissage. Passer chaque slide /
+paragraphe au tri suivant, **avant** d'écrire quoi que ce soit.
+
+**Essentiel (garder, formulation exacte du prof) :**
+- définitions (« un X est… »), surtout quand le prof les met en gras ou les répète
+- définitions formelles : n-uplets, notations, syntaxe (ex. `A = <Q, A, E, I, F>`)
+- classifications et « types de » (ex. sûreté vs vivacité), différences entre deux notions
+- composants d'une chose (« une technique formelle = 1… 2… 3… »)
+- méthodes, algorithmes, règles, formules, et leurs conditions
+- avantages / limites / « ce que ça permet / ne permet pas » : questions de cours
+  classiques, à garder **en mots-clés**
+- tout ce qui est apparu dans une annale, un TD ou une interro, même si ça a l'air
+  anecdotique
+
+**Blabla (supprimer ou réduire à une ligne) :**
+- étymologie, historique, citations, « le terme vient du grec… »
+- slides de motivation (« les systèmes sont de plus en plus complexes… ») : garder
+  l'idée en une ligne si elle répond à « pourquoi X ? »
+- longues listes d'exemples industriels ou d'applications : 2–3 exemples marquants
+  au plus, sauf si les annales en demandent
+- exemples hors sujet (modèle météo, économique…) : un mot au plus
+- répétitions : la même idée reformulée sur plusieurs slides, le même schéma repris
+  et complété de slide en slide (garder seulement la version finale)
+- en-têtes, pieds de page, numéros, titres de cours répétés, texte de schéma éclaté
+  par l'extraction PDF (le reconstruire en un schéma propre ou une ligne)
+
+**Règle de prudence :** le blabla d'un cours peut être une question d'examen
+(« citez les apports des méthodes formelles »). On **compresse** (liste de mots-clés)
+plutôt qu'on supprime, dès qu'une liste répond à une question qu'on pourrait poser.
+On supprime seulement ce qui ne répond à aucune question plausible.
+
+Pour chaque document de cours, donner à la fin le ratio : « 57 slides → 2 pages ».
+
 ## 3. Le cours de révision
 
 Un fichier par matière, ordonné par chapitre, chaque chapitre ainsi :

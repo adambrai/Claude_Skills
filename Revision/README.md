@@ -8,6 +8,14 @@ notion par priorité, puis écrit un cours dense : toutes les infos essentielles
 (définitions, formules, méthodes, pièges, questions types avec la réponse attendue), et
 rien qui ne serve pas à gagner des points. Le but est de tout savoir sans saturer.
 
+## Blabla ou essentiel
+
+Avant d'écrire, la skill trie chaque slide. Elle garde les définitions exactes, les
+notations formelles, les classifications, les méthodes, et ce qui est tombé. Elle
+enlève l'étymologie, les slides de motivation, les répétitions, les longues listes
+d'exemples. Une liste qui pourrait faire une question de cours (« citez les apports
+de… ») est compressée en mots-clés plutôt que supprimée.
+
 ## Ce que ça produit
 
 Dans `revision/<matiere>/` :
