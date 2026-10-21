@@ -23,7 +23,7 @@ README.*
 | [`Vitrine/`](Vitrine/) | `/vitrine` | Conçoit une interface web en cinq étapes validées une à une, avec captures en bureau et à 375 px, puis un audit. |
 | [`Fourmi/`](Fourmi/) | `/fourmi` | Mesure ce qu'un projet charge dans le contexte et propose de quoi dépenser moins de tokens. |
 | [`Douane/`](Douane/) | `/douane` | Inspecte une skill trouvée ailleurs avant de l'installer, sans jamais exécuter ses fichiers. |
-| [`Revision/`](Revision/) | `/revision` | Construit ton cours de révision à partir des cours et des annales : ce qui est tombé, ce qui peut tomber, l'essentiel sans saturer. |
+| [`Revision/`](Revision/) | `/revision` | Construit ton cours de révision : trie le cours sans perdre d'info, analyse les annales et la façon de répondre attendue par le prof. |
 
 ### [Débat](Debat/) : `/debat`
 
@@ -62,11 +62,11 @@ puis passe le relais aux skills plus profondes.
 
 ### [Revision](Revision/) : `/revision`
 
-Tu donnes le dossier d'une matière (cours, TD, interros, examens, corrigés). La skill
-analyse ce qui est déjà tombé, classe chaque notion par priorité, puis écrit un cours
-dense : définitions, formules, méthodes, pièges et questions types avec la réponse
-attendue. Elle vérifie que chaque question des annales est couverte, et ajoute un quiz
-et une fiche d'une page pour la veille.
+Tu donnes le dossier d'une matière (cours, TD, TP, interros, examens, corrigés). La skill
+relève toutes les notions du cours, enlève seulement le bruit, garde la méthode et les
+notations du prof, analyse ce qui est tombé, ce qui peut tomber et comment le prof veut
+qu'on réponde. Elle écrit le cours avec des réponses modèles au format attendu, puis
+vérifie qu'aucune notion n'est perdue et que chaque question d'annale est couverte.
 
 [Documentation de Revision](Revision/README.md)
 

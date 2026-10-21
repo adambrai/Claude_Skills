@@ -3,18 +3,39 @@
 Skill pour Claude Code qui construit **ton propre cours de révision** à partir de tes
 documents : cours, slides, TD, TP, interros, examens, corrigés, notes.
 
-Elle regarde d'abord ce qui est déjà tombé, en déduit ce qui peut tomber, classe chaque
-notion par priorité, puis écrit un cours dense : toutes les infos essentielles
-(définitions, formules, méthodes, pièges, questions types avec la réponse attendue), et
-rien qui ne serve pas à gagner des points. Le but est de tout savoir sans saturer.
+Ce n'est pas un résumé. La skill **trie et analyse** : elle relève toutes les notions
+du cours, enlève seulement le bruit, garde la méthode et les notations du prof, étudie
+ce qui est tombé et ce qui peut tomber, et surtout **comment le prof veut qu'on
+réponde**.
 
-## Blabla ou essentiel
+## Le processus
 
-Avant d'écrire, la skill trie chaque slide. Elle garde les définitions exactes, les
-notations formelles, les classifications, les méthodes, et ce qui est tombé. Elle
-enlève l'étymologie, les slides de motivation, les répétitions, les longues listes
-d'exemples. Une liste qui pourrait faire une question de cours (« citez les apports
-de… ») est compressée en mots-clés plutôt que supprimée.
+1. **Inventaire** : chaque fichier est classé (cours, TD, TP, interro, examen, corrigé,
+   consignes du prof).
+2. **Registre** : toutes les notions du cours, slide par slide, avec leur source.
+3. **Tri** : chaque notion devient « à savoir », « à comprendre », « exemple » ou
+   « bruit ». Seul le bruit disparaît ; les répétitions sont fusionnées, pas perdues.
+4. **Annales** : chaque question est découpée et rattachée à une notion. On obtient la
+   carte des sujets (tombé, fréquence, points, ce qui peut tomber).
+5. **Façon de répondre** : d'après les corrigés et les barèmes, la structure attendue,
+   les notations, le niveau de détail, ce qui rapporte ou fait perdre des points, et un
+   gabarit de réponse par type de question.
+6. **Cours** : le plan du prof, sa méthode, ses notations, et pour chaque chapitre une
+   question type avec la réponse modèle au format attendu.
+7. **Double vérification** : aucune notion du registre n'est perdue, et chaque question
+   d'annale est couverte, au bon format.
+8. **Quiz et fiche de la veille.**
+
+## Priorités
+
+| | sens |
+|---|---|
+| ★★★ | tombé plusieurs fois ou annoncé par le prof |
+| ★★ | tombé une fois, ou chapitre important jamais interrogé (probable) |
+| ★ | nécessaire pour comprendre un ★★★ |
+| ○ | secondaire : gardé, mais à réviser en dernier |
+
+La priorité dit dans quel ordre réviser. Elle ne supprime rien.
 
 ## Ce que ça produit
 
@@ -22,22 +43,11 @@ Dans `revision/<matiere>/` :
 
 | fichier | contenu |
 |---|---|
-| `cours.md` | la carte des sujets (tombé / probable / hors radar) puis le cours, chapitre par chapitre |
-| `annales.md` | chaque question d'interro ou d'examen, classée, avec la réponse modèle |
-| `quiz.md` | questions de rappel actif, réponses cachées |
-| `veille.md` | une page à relire le matin de l'examen |
-
-Avant de rendre, la skill vérifie que **chaque question des annales** peut être résolue
-avec le cours écrit. Si ce n'est pas le cas, elle complète.
-
-## Priorités
-
-| | sens |
-|---|---|
-| ★★★ | tombé plusieurs fois ou annoncé par le prof : à maîtriser par cœur |
-| ★★ | tombé une fois, ou gros chapitre jamais interrogé : probable |
-| ★ | utile pour comprendre un ★★★ : en surface |
-| — | jamais tombé, marginal : une ligne au plus |
+| `registre.md` | toutes les notions du cours, avec source, statut et « tombé » |
+| `examen.md` | annales découpées, carte des sujets, façon de répondre, gabarits |
+| `cours.md` | le cours de révision |
+| `quiz.md` | rappel actif, réponses cachées |
+| `veille.md` | une page pour le matin de l'examen |
 
 ## Utilisation
 
