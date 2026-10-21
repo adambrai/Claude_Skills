@@ -23,6 +23,7 @@ README.*
 | [`Vitrine/`](Vitrine/) | `/vitrine` | Conçoit une interface web en cinq étapes validées une à une, avec captures en bureau et à 375 px, puis un audit. |
 | [`Fourmi/`](Fourmi/) | `/fourmi` | Mesure ce qu'un projet charge dans le contexte et propose de quoi dépenser moins de tokens. |
 | [`Douane/`](Douane/) | `/douane` | Inspecte une skill trouvée ailleurs avant de l'installer, sans jamais exécuter ses fichiers. |
+| [`Revision/`](Revision/) | `/revision` | Construit ton cours de révision à partir des cours et des annales : ce qui est tombé, ce qui peut tomber, l'essentiel sans saturer. |
 
 ### [Débat](Debat/) : `/debat`
 
@@ -58,6 +59,16 @@ contourne aucun système de sécurité : elle décrit un travail légitime pour 
 puis passe le relais aux skills plus profondes.
 
 [Documentation d'Aegis](Aegis/README.md)
+
+### [Revision](Revision/) : `/revision`
+
+Tu donnes le dossier d'une matière (cours, TD, interros, examens, corrigés). La skill
+analyse ce qui est déjà tombé, classe chaque notion par priorité, puis écrit un cours
+dense : définitions, formules, méthodes, pièges et questions types avec la réponse
+attendue. Elle vérifie que chaque question des annales est couverte, et ajoute un quiz
+et une fiche d'une page pour la veille.
+
+[Documentation de Revision](Revision/README.md)
 
 ## Installer une skill
 
