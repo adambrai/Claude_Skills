@@ -1,0 +1,112 @@
+/* Revision: print style for course PDFs.
+   Apple-like: system font, size-specific tracking and leading, one accent, quiet surfaces. */
+
+:root {
+  --ink: #1d1d1f;
+  --ink-2: #424245;
+  --ink-3: #6e6e73;
+  --line: #d2d2d7;
+  --surface: #f5f5f7;
+  --accent: #0071e3;
+  --def: #0071e3;      --def-bg: #f0f6fe;
+  --method: #248a3d;   --method-bg: #f0f8f2;
+  --trap: #c9341f;     --trap-bg: #fdf2f0;
+  --exam: #8944ab;     --exam-bg: #f7f1fa;
+  --why: #b25000;      --why-bg: #fdf6ee;
+}
+
+@page {
+  size: A4;
+  margin: 14mm 15mm 15mm 15mm;
+  @bottom-right { content: counter(page); font: 8pt -apple-system, system-ui, sans-serif; color: #86868b; }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body {
+  margin: 0;
+  font-family: -apple-system, "SF Pro Text", system-ui, "Helvetica Neue", Arial, sans-serif;
+  font-size: 10pt;
+  line-height: 1.48;
+  letter-spacing: 0.003em;
+  color: var(--ink);
+  background: #fff;
+  font-optical-sizing: auto;
+  hyphens: auto;
+}
+
+/* Header: one compact band at the top of page 1, no cover page, no table of contents */
+.head { display: flex; justify-content: space-between; align-items: baseline; gap: 6mm; border-bottom: 1.5px solid var(--ink); padding-bottom: 2mm; margin-bottom: 4mm; }
+.head h1 { font-family: -apple-system, "SF Pro Display", system-ui, sans-serif; font-size: 17pt; line-height: 1.1; letter-spacing: -0.02em; font-weight: 700; margin: 0; }
+.head .meta { font-size: 8.5pt; color: var(--ink-3); text-align: right; }
+
+/* Headings: tighter tracking and leading as size grows */
+h2 {
+  font-family: -apple-system, "SF Pro Display", system-ui, sans-serif;
+  font-size: 16pt; line-height: 1.15; letter-spacing: -0.018em; font-weight: 700;
+  margin: 0 0 2.5mm; padding-bottom: 1.5mm; break-after: avoid; border-bottom: 1px solid var(--line);
+}
+section.chapter { margin-top: 7mm; }
+section.chapter:first-of-type { margin-top: 0; }
+h3 { font-size: 12pt; line-height: 1.2; letter-spacing: -0.01em; font-weight: 650; margin: 4.5mm 0 1.5mm; break-after: avoid; }
+h4 { font-size: 11pt; line-height: 1.3; font-weight: 650; margin: 4mm 0 1.5mm; color: var(--ink-2); break-after: avoid; }
+p { margin: 0 0 2.5mm; orphans: 3; widows: 3; }
+ul, ol { margin: 0 0 2.5mm; padding-left: 5.5mm; }
+li { margin: 0.6mm 0; }
+li::marker { color: var(--ink-3); }
+strong { font-weight: 650; }
+a { color: var(--accent); text-decoration: none; }
+
+/* Priority badge and exam line under the chapter title */
+.prio { display: inline-block; vertical-align: middle; margin-left: 3mm; font-size: 9pt; font-weight: 600; letter-spacing: 0.02em; padding: 0.6mm 2.4mm; border-radius: 99px; background: var(--surface); color: var(--ink-2); }
+.prio.p3 { background: #1d1d1f; color: #fff; }
+.prio.p2 { background: #e8e8ed; color: var(--ink); }
+.examline { font-size: 9pt; color: var(--ink-2); background: var(--surface); border-radius: 6px; padding: 1.6mm 3mm; margin: 0 0 3mm; }
+.examline b { color: var(--ink); }
+.thread { font-size: 10pt; color: var(--ink-2); margin: 0 0 3mm; }
+
+/* Boxes */
+.box { border-radius: 8px; padding: 2.4mm 3.5mm 1.6mm; margin: 2.2mm 0 2.6mm; break-inside: avoid; border-left: 3px solid; }
+.box > .label { display: block; font-size: 8pt; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; margin-bottom: 1.2mm; }
+.box p:last-child, .box ul:last-child, .box ol:last-child { margin-bottom: 1mm; }
+.def    { background: var(--def-bg);    border-color: var(--def); }    .def > .label    { color: var(--def); }
+.method { background: var(--method-bg); border-color: var(--method); } .method > .label { color: var(--method); }
+.trap   { background: var(--trap-bg);   border-color: var(--trap); }   .trap > .label   { color: var(--trap); }
+.exam   { background: var(--exam-bg);   border-color: var(--exam); }   .exam > .label   { color: var(--exam); }
+.why    { background: var(--why-bg);    border-color: var(--why); }    .why > .label    { color: var(--why); }
+.example { background: var(--surface); border-color: #86868b; }       .example > .label { color: var(--ink-3); }
+.verbatim::before { content: "« "; color: var(--ink-3); }
+.verbatim::after  { content: " »"; color: var(--ink-3); }
+
+/* Formulas and notation */
+.formula { font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 10.5pt; background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 2.6mm 4mm; margin: 2.5mm 0 3mm; break-inside: avoid; white-space: pre-wrap; }
+code { font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 0.92em; background: var(--surface); border-radius: 4px; padding: 0.2mm 1.2mm; }
+.legend { font-size: 9.5pt; color: var(--ink-2); margin: -1mm 0 3mm; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; margin: 2.5mm 0 4mm; font-size: 9.6pt; line-height: 1.4; }
+thead { display: table-header-group; }
+tr { break-inside: avoid; }
+th { text-align: left; font-weight: 650; font-size: 8.6pt; letter-spacing: 0.03em; text-transform: uppercase; color: var(--ink-3); border-bottom: 1.2px solid var(--ink); padding: 1.6mm 2.4mm; }
+td { border-bottom: 1px solid #e5e5ea; padding: 1.8mm 2.4mm; vertical-align: top; }
+td:first-child { font-weight: 600; }
+
+/* Model question and answer */
+.qa { break-inside: avoid; border: 1px solid var(--line); border-radius: 10px; margin: 3mm 0; overflow: hidden; }
+.qa .q { background: var(--surface); padding: 2.2mm 3.5mm; font-weight: 600; }
+.qa .q .pts { float: right; font-weight: 500; font-size: 9pt; color: var(--ink-3); }
+.qa .a { padding: 2.2mm 3.5mm 1mm; }
+.qa .a::before { content: "Réponse modèle"; display: block; font-size: 8pt; font-weight: 700; letter-spacing: 0.07em; text-transform: uppercase; color: var(--method); margin-bottom: 1.2mm; }
+
+/* Figures (inline SVG or images) */
+figure { margin: 2mm 0 3mm; text-align: center; break-inside: avoid; }
+figure svg, figure img { max-width: 100%; height: auto; }
+figcaption { font-size: 9pt; color: var(--ink-3); margin-top: 1.5mm; }
+
+/* Quiz: questions first, answers grouped at the end */
+.quiz ol > li { margin: 2mm 0; }
+.answers { font-size: 9.6pt; margin-top: 3mm; }
+
+.page-break { page-break-after: always; }
+.muted { color: var(--ink-3); }
+.small { font-size: 9pt; }

@@ -23,7 +23,7 @@ README.*
 | [`Vitrine/`](Vitrine/) | `/vitrine` | Conçoit une interface web en cinq étapes validées une à une, avec captures en bureau et à 375 px, puis un audit. |
 | [`Fourmi/`](Fourmi/) | `/fourmi` | Mesure ce qu'un projet charge dans le contexte et propose de quoi dépenser moins de tokens. |
 | [`Douane/`](Douane/) | `/douane` | Inspecte une skill trouvée ailleurs avant de l'installer, sans jamais exécuter ses fichiers. |
-| [`Revision/`](Revision/) | `/revision` | Construit ton cours de révision : trie le cours sans perdre d'info, analyse les annales et la façon de répondre attendue par le prof. |
+| [`Revision/`](Revision/) | `/revision` | Construit ton cours de révision : trie le cours sans perdre d'info, analyse les annales et la façon de répondre, et sort un PDF compact avec `pdf`. |
 
 ### [Débat](Debat/) : `/debat`
 

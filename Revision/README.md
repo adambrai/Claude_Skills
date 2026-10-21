@@ -49,17 +49,32 @@ Dans `revision/<matiere>/` :
 | `quiz.md` | rappel actif, réponses cachées |
 | `veille.md` | une page pour le matin de l'examen |
 
+## Le PDF
+
+Ajoute `pdf` à la commande (ou écris « etudes pdf », « en pdf ») : la skill met tout le
+cours en page dans un PDF sobre, inspiré d'Apple. Il n'y a pas de page de titre ni de
+sommaire, et aucune page n'est perdue : le contenu commence en haut de la page 1. Un
+encadré coloré par type d'information (définition, pour comprendre, piège, méthode du
+prof, comment répondre), avec des schémas propres et des réponses modèles.
+
+Il faut Google Chrome (ou Chromium / Edge / Brave) pour l'impression. Les scripts
+n'utilisent que la bibliothèque standard de Python.
+
 ## Utilisation
 
 ```
+/revision
 /revision ~/Documents/S3/Reseaux
+/revision ~/Documents/S3/Reseaux pdf
 /revision quiz
 /revision veille
 /revision maj interro2.pdf
 /revision exam-blanc
 ```
 
-Mets tout ce que tu as dans un dossier par matière, même en vrac : la skill classe les
+Sans chemin, la skill lit **tout** le dossier où tu es, sous-dossiers compris. Elle liste
+chaque fichier dans `sources.md` et le coche une fois lu en entier : aucun fichier n'est
+sauté. Mets tout ce que tu as dans un dossier par matière, même en vrac : elle classe les
 fichiers elle-même. Si le prof a dit « ça tombe » ou « pas au programme », écris-le dans
 un fichier texte du dossier, ça passe avant le reste.
 
@@ -77,17 +92,20 @@ Ou à la main :
 ```bash
 git clone https://github.com/adambrai/Claude_Skills.git
 mkdir -p ~/.claude/skills/revision
-cp Claude_Skills/Revision/SKILL.md ~/.claude/skills/revision/
+cp -R Claude_Skills/Revision/. ~/.claude/skills/revision/
 ```
 
-Il faut Claude Code. La skill est un simple jeu d'instructions, sans script ni
-dépendance.
+Il faut Claude Code et Python 3. Chrome sert seulement pour le PDF.
 
 ## Fichiers
 
 | fichier | rôle |
 |---|---|
 | `SKILL.md` | les étapes que suit Claude Code |
+| `scripts/inventaire.py` | liste tous les fichiers du dossier, pour n'en sauter aucun |
+| `scripts/build_pdf.py` | transforme le cours HTML en PDF avec Chrome |
+| `assets/template.html` | modèle du PDF, avec chaque type d'encadré |
+| `assets/cours.css` | le style du PDF |
 
 ## Licence
 

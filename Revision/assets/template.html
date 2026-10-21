@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Modélisation des Systèmes Communicants — Révision</title>
+<!-- STYLE -->
+</head>
+<body>
+
+<!-- Modèle de référence pour /revision pdf. Chaque composant est montré une fois.
+     Copier ce fichier, garder la structure, remplacer le contenu.
+     Pas de page de titre, pas de sommaire, pas de saut de page : le contenu commence en haut de la page 1. -->
+
+<header class="head">
+  <h1>Modélisation des Systèmes Communicants</h1>
+  <div class="meta">M2 SSI · Y. Hammal · ★★★ à maîtriser · ★★ probable · ★ utile · ○ secondaire</div>
+</header>
+
+<main>
+
+<section class="chapter">
+  <h2>1. Introduction à la modélisation et à la vérification <span class="prio p3">★★★</span></h2>
+  <p class="examline"><b>Tombé :</b> pas d'annale fournie. <b>Peut tomber :</b> définitions (système communicant, protocole, modèle), sûreté / vivacité, composants d'une technique formelle, vérification vs validation, apports et limites. Ce sont les questions de cours classiques d'un chapitre d'introduction.</p>
+  <p class="thread">Le fil rouge : les systèmes communicants sont trop complexes pour être testés à la main. On les <b>modélise</b> (abstraction), on écrit les <b>propriétés</b> attendues en logique, et un outil <b>vérifie</b> mathématiquement que le modèle les respecte.</p>
+
+  <h3>1.1 Système, système concurrent, système communicant</h3>
+  <div class="box def"><span class="label">Définition (prof)</span>
+    <p class="verbatim">Un système est un ensemble d'éléments (i.e., composants) interagissant entre eux selon certains principes ou règles.</p>
+    <p>Il est déterminé par : la <b>nature de ses éléments</b>, le <b>type de leurs interactions</b> et sa <b>frontière</b>, c'est-à-dire le critère qui dit si une entité appartient au système ou à son environnement.</p>
+  </div>
+  <p>Un système a une <b>structure</b> (des éléments reliés), un <b>comportement</b> (des processus qui transforment des entrées en sorties) et des <b>interconnexions</b>. Structure et comportement se décomposent en sous-systèmes (modules) et sous-processus.</p>
+
+  <table>
+    <thead><tr><th>Notion</th><th>Définition</th><th>Ce qui la distingue</th></tr></thead>
+    <tbody>
+      <tr><td>Système concurrent</td><td>Processus qui s'exécutent simultanément (actions locales) et se synchronisent (interactions)</td><td>2 modes de communication : mémoire partagée <i>ou</i> envoi de messages</td></tr>
+      <tr><td>Système parallèle</td><td>Système concurrent dont les processus s'exécutent en parallèle</td><td>Exécution physiquement parallèle</td></tr>
+      <tr><td>Système communicant</td><td>Système concurrent dont la coopération se fait par envoi de messages via un medium</td><td><b>Pas de mémoire commune</b> ; composants souvent distribués</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box why"><span class="label">Pour comprendre</span>
+    <p>Dans chaque nœud, on sépare les processus de <b>communication</b> des processus de <b>calcul</b>. Le prof fait l'analogie suivante : le protocole est au processus de communication ce que l'algorithme est au processus de calcul.</p>
+  </div>
+
+  <div class="box trap"><span class="label">Piège</span>
+    <p>Concurrent ≠ communicant. Un système concurrent peut communiquer par mémoire partagée ; un système communicant, <b>jamais</b> (envoi de messages uniquement).</p>
+  </div>
+
+  <h3>1.2 Protocole de communication et protocole de sécurité</h3>
+  <div class="box def"><span class="label">Définition (prof)</span>
+    <p class="verbatim">Un protocole de communication est l'ensemble des règles communes agréées à suivre pour permettre la communication et la coordination entre des entités communicantes.</p>
+  </div>
+  <p>Sa spécification définit la <b>syntaxe</b>, la <b>sémantique</b> et les <b>synchronisations</b>, indépendamment de l'implémentation. Elle comporte 3 parties :</p>
+  <ol>
+    <li><b>Format des messages</b> valides.</li>
+    <li><b>Procédures de traitement</b> : la réaction du processus à chaque message reçu.</li>
+    <li><b>Traitement des erreurs</b> : la réaction aux événements non désirés (données corrompues, timeouts).</li>
+  </ol>
+  <div class="box def"><span class="label">Protocole de sécurité</span>
+    <p>C'est une <b>sous-classe</b> des protocoles de communication : une séquence déterminée de messages qui utilise des primitives cryptographiques (chiffrement, signature…) pour atteindre des objectifs de sécurité, <b>même si le réseau n'est pas sûr</b>.</p>
+  </div>
+
+  <h3>1.3 Formalisme : l'automate fini communicant</h3>
+  <div class="formula">A = ⟨ Q, A, E, I, F ⟩</div>
+  <p class="legend">Q : ensemble fini d'états · A : alphabet (noms des interactions) · E ⊆ Q × A × Q : transitions · I ⊆ Q : états initiaux · F ⊆ Q : états finaux.</p>
+  <ul>
+    <li>Une transition (p, x, q) se note <code>p –x→ q</code>. x est l'<b>étiquette</b>, p l'<b>origine</b>, q l'<b>extrémité</b>.</li>
+    <li>x est une action interne, un <b>envoi</b> <code>a!</code> ou une <b>réception</b> <code>a?</code> sur le canal a.</li>
+    <li>Le comportement du système global est l'ensemble des automates de ses processus.</li>
+  </ul>
+  <figure>
+    <svg viewBox="0 0 420 110" width="420" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, system-ui, sans-serif" font-size="13">
+      <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1d1d1f"/></marker></defs>
+      <line x1="10" y1="55" x2="48" y2="55" stroke="#1d1d1f" stroke-width="1.3" marker-end="url(#ar)"/>
+      <circle cx="75" cy="55" r="24" fill="#fff" stroke="#1d1d1f" stroke-width="1.3"/><text x="75" y="60" text-anchor="middle">q0</text>
+      <circle cx="225" cy="55" r="24" fill="#fff" stroke="#1d1d1f" stroke-width="1.3"/><text x="225" y="60" text-anchor="middle">q1</text>
+      <circle cx="375" cy="55" r="24" fill="#fff" stroke="#1d1d1f" stroke-width="1.3"/><circle cx="375" cy="55" r="19" fill="none" stroke="#1d1d1f" stroke-width="1.3"/><text x="375" y="60" text-anchor="middle">q2</text>
+      <line x1="99" y1="55" x2="199" y2="55" stroke="#1d1d1f" stroke-width="1.3" marker-end="url(#ar)"/><text x="150" y="46" text-anchor="middle" fill="#0071e3">req!</text>
+      <line x1="249" y1="55" x2="349" y2="55" stroke="#1d1d1f" stroke-width="1.3" marker-end="url(#ar)"/><text x="300" y="46" text-anchor="middle" fill="#0071e3">ack?</text>
+    </svg>
+    <figcaption>Exemple : un client envoie une requête puis attend l'acquittement. I = {q0}, F = {q2} (double cercle).</figcaption>
+  </figure>
+
+  <div class="box method"><span class="label">Méthode du prof : décrire un processus par un automate</span>
+    <ol>
+      <li>Lister les états du processus (Q), et marquer l'initial (I) et les finaux (F).</li>
+      <li>Lister les interactions : envois <code>a!</code>, réceptions <code>a?</code> et actions internes (A).</li>
+      <li>Pour chaque état, écrire les transitions <code>p –x→ q</code> possibles (E).</li>
+      <li>Donner le 5-uplet complet, puis le graphe.</li>
+    </ol>
+  </div>
+
+  <h3>1.4 Propriétés : sûreté et vivacité</h3>
+  <table>
+    <thead><tr><th>Propriété</th><th>Définition</th><th>Exemple</th></tr></thead>
+    <tbody>
+      <tr><td>Sûreté (safety)</td><td>Une mauvaise chose ne se produit <b>jamais</b></td><td>Deux processus ne sont jamais en section critique en même temps</td></tr>
+      <tr><td>Vivacité (liveness)</td><td>Une bonne chose finit <b>toujours</b> par se produire</td><td>Toute requête finit par recevoir une réponse</td></tr>
+    </tbody>
+  </table>
+
+  <div class="box exam"><span class="label">Comment répondre à l'examen</span>
+    <ul>
+      <li>« Définissez… » : donner la définition du prof, puis une ligne d'explication ou un exemple.</li>
+      <li>« Différence entre… » : faire un tableau (notion, définition, ce qui la distingue).</li>
+      <li>Automate : toujours donner le 5-uplet <b>et</b> le graphe, avec la notation <code>a!</code> / <code>a?</code>.</li>
+    </ul>
+  </div>
+
+  <div class="qa">
+    <div class="q">Distinguez vérification et validation. Pourquoi la validation ne peut-elle pas être prouvée formellement ? <span class="pts">≈ 3 pts</span></div>
+    <div class="a">
+      <ul>
+        <li><b>Vérification</b> : on montre que le produit est conforme à sa spécification (spécification ↔ conception ↔ programme). Elle peut être <b>prouvée</b>, parce que les deux côtés sont formels.</li>
+        <li><b>Validation</b> : on montre que la spécification correspond aux <b>besoins de l'utilisateur</b>.</li>
+        <li>La validation ne peut pas être prouvée formellement, parce que les besoins de l'utilisateur ne sont pas exprimés en termes mathématiques.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="chapter quiz">
+  <h2>Quiz</h2>
+  <ol>
+    <li>Quels sont les 3 éléments qui déterminent un système ?</li>
+    <li>Quelle est la différence entre un système concurrent et un système communicant ?</li>
+  </ol>
+  <div class="answers">
+    <h3>Réponses</h3>
+    <ol>
+      <li>La nature de ses éléments, le type de leurs interactions, sa frontière.</li>
+      <li>Le communicant n'a pas de mémoire commune : il communique uniquement par envoi de messages via un medium.</li>
+    </ol>
+  </div>
+</section>
+
+</main>
+</body>
+</html>
